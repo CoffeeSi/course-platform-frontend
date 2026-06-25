@@ -19,21 +19,28 @@ export type Course = {
     category?: Category;
 };
 
-export type Module = {
+export type CourseShort = Pick<Course, "id" | "title" | "price" | "is_published">;
+
+export type ModuleShort = {
     id: number;
-    course: Course;
+    course: number;
+    course_detail: CourseShort;
     title: string;
     order: number;
-    lessons?: Lesson[];
+};
+
+export type Module = ModuleShort & {
+    lessons: Lesson[];
 };
 
 export type Lesson = {
     id: number;
-    module: Module;
+    module: number;
+    module_detail: ModuleShort;
     title: string;
     content_text?: string;
     video_url?: string;
-    video_file?: string;
+    video_file?: string | null;
     order: number;
     is_free: boolean;
     created_at: string;

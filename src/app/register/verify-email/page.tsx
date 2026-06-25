@@ -7,14 +7,14 @@ export default async function VerifyEmailPage({
 }: {
   searchParams: Promise<{ email?: string }>;
 }) {
-  const profile = await getCurrentUser();
+  const user = await getCurrentUser();
 
-  if (!profile) redirect("/login");
-  if (profile.is_email_verified) redirect("/profile");
+  if (!user) redirect("/login");
+  if (user.is_email_verified) redirect("/profile");
 
   const { email } = await searchParams;
 
   return (
-      <VerifyEmailForm initialEmail={email || profile.email} />
+      <VerifyEmailForm initialEmail={email || user.email} />
   );
 }

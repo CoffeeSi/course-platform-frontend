@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default async function CourseDetails({ courseID }: { courseID: number }) {
   const token = (await cookies()).get("access_token")?.value;
-  const profile = await getCurrentUser();
+  const user = await getCurrentUser();
   let course;
 
   try {
@@ -27,7 +27,7 @@ export default async function CourseDetails({ courseID }: { courseID: number }) 
         <h1 className="text-4xl font-extrabold tracking-tight">{course.title}</h1>
         <p className="max-w-3xl text-muted-foreground">{course.description}</p>
         <Suspense fallback={<p className="text-sm text-muted-foreground">Загрузка...</p>}>
-          <EnrollButton courseId={course.id} price={course.price} isAuthorized={profile !== null} />
+          <EnrollButton courseId={course.id} price={course.price} isAuthorized={user !== null} />
         </Suspense>
       </section>
 

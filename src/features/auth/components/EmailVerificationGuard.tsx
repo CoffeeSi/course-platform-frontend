@@ -2,13 +2,13 @@ import {redirect} from "next/navigation";
 import getCurrentUser from "@/features/auth/utils/getCurrentUser";
 
 export default async function EmailVerificationGuard({ children }: { children: React.ReactNode }) {
-  const profile = await getCurrentUser();
+  const user = await getCurrentUser();
 
-  if (!profile) {
+  if (!user) {
     redirect("/login");
   }
 
-  if (!profile.is_email_verified) {
+  if (!user.is_email_verified) {
     redirect("/register/verify-email");
   }
 

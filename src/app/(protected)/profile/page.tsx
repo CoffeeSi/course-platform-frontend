@@ -3,9 +3,9 @@ import { ProfileForm } from "./ProfileForm";
 import getCurrentUser from "@/features/auth/utils/getCurrentUser";
 
 export default async function ProfilePage() {
-  const profile = await getCurrentUser()
+  const user = await getCurrentUser()
 
-  if (!profile) {
+  if (!user) {
     redirect("/login");
   }
 
@@ -17,18 +17,18 @@ export default async function ProfilePage() {
         <dl className="grid gap-2 rounded-md border p-4 text-sm">
           <div className="flex justify-between gap-4">
             <dt className="text-muted-foreground">Электронная почта</dt>
-            <dd>{profile.email}</dd>
+            <dd>{user.email}</dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-muted-foreground">Роль</dt>
-            <dd>{profile.role}</dd>
+            <dd>{user.role}</dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-muted-foreground">Почта подтверждена</dt>
-            <dd>{profile.is_email_verified ? "Yes" : "No"}</dd>
+            <dd>{user.is_email_verified ? "Yes" : "No"}</dd>
           </div>
         </dl>
-        <ProfileForm initialData={profile.profile} />
+        <ProfileForm initialData={user.profile} />
       </div>
     </main>
   );

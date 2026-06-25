@@ -3,10 +3,10 @@ import getCurrentUser from "@/features/auth/utils/getCurrentUser";
 import RegisterForm from "@/app/register/RegisterForm";
 
 export default async function RegisterPage() {
-  const profile = await getCurrentUser();
+  const user = await getCurrentUser();
 
-  if (profile && profile.is_email_verified) redirect("/profile")
-  else if (profile && !profile?.is_email_verified) redirect("/register/verify-email");
+  if (user && user.is_email_verified) redirect("/profile")
+  else if (user && !user?.is_email_verified) redirect("/register/verify-email");
 
   return (
     <>

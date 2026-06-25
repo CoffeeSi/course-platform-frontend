@@ -4,26 +4,26 @@ import {LogoutButton} from "@/features/auth/components/LogoutButton";
 
 export default async function Header() {
 
-  const profile = await getCurrentUser();
+  const user = await getCurrentUser();
 
   return (
     <header className="w-full border-b">
       <div className="max-w-7xl mx-auto py-4 px-4 flex items-center justify-between gap-4">
         <Link href="/" className="text-2xl font-bold">Course Platform</Link>
         <nav className="flex items-center gap-4 text-sm font-medium">
-          {(!profile || profile.is_email_verified) && (
+          {(!user || user.is_email_verified) && (
             <Link href="/courses" className="hover:text-primary transition-colors">Курсы</Link>
           )}
-          {profile ? (
+          {user ? (
             <>
-              {profile.is_email_verified ? (
+              {user.is_email_verified ? (
                 <>
                   <Link href="/my-courses" className="hover:text-primary transition-colors">Мои курсы</Link>
-                  <Link href="/profile" className="hover:text-primary transition-colors">{profile.email}</Link>
+                  <Link href="/profile" className="hover:text-primary transition-colors">{user.email}</Link>
                 </>
               ) : (
                 <span className="text-destructive bg-destructive/10 px-2 py-1 rounded text-xs">
-                  {profile.email} (Не подтвержден)
+                  {user.email} (Не подтвержден)
                 </span>
               )}
               <LogoutButton />

@@ -3,9 +3,9 @@ import getCurrentUser from "@/features/auth/utils/getCurrentUser";
 import {LoginForm} from "@/app/login/LoginForm";
 
 export default async function LoginPage() {
-  const profile = await getCurrentUser();
+  const user = await getCurrentUser();
 
-  if (profile) {
+  if (user) {
     redirect("/profile");
   }
 

@@ -1,6 +1,9 @@
 import { VideoPlayer } from "@/components/common/player/player";
 import { lessonsApi } from "@/features/courses/api/lessons.api";
+import { enrollmentsApi } from "@/features/enrollments/api/enrollmets.api";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { ApiError } from "@/shared/api/client";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -12,12 +15,25 @@ export default async function LessonPage({ params }: Props) {
 
   const token = (await cookies()).get("access_token")?.value;
 
-  let lesson;
+  let lesson, status;
   try {
     lesson = await lessonsApi.fetchLesson(lessonID, token);
-  } catch {
+    status = await enrollmentsApi.fetchEnrollmentStatus(lesson.module_detail.course_detail.id, token)
+  } catch (error) {
+    if (error instanceof ApiError && (error.status === 403 || error.status === 404)) {
+      redirect('/courses');
+    }
+    console.error("Ошибка при загрузке урока:", error)
     return <p className="text-destructive">Lesson not found</p>;
+  } 
+
+  console.log(status)
+
+  if (!status.is_enrolled) {
+    redirect("/courses")
   }
+
+  console.log(status)
 
   return (
     <>

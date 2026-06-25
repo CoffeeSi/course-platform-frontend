@@ -4,6 +4,15 @@ interface CustomRequestInit extends RequestInit {
   token?: string;
 }
 
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+    this.name = 'ApiError';
+  }
+}
+
 async function customFetch<T>(endpoint: string, options: CustomRequestInit = {}): Promise<T> {
   let url = endpoint.startsWith('http') ? endpoint : `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`;
 
@@ -39,7 +48,10 @@ async function customFetch<T>(endpoint: string, options: CustomRequestInit = {})
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || `HTTP Error: ${response.status}`);
+    throw new ApiError(
+      errorData.message || errorData.detail || `HTTP Error: ${response.status}`, 
+      response.status
+    );
   }
 
   if (response.status === 204) {
