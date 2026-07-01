@@ -42,6 +42,8 @@ export type Lesson = {
     video_url?: string;
     video_file?: string | null;
     order: number;
+    next_lesson_id?: number | null;
+    prev_lesson_id?: number | null;
     is_free: boolean;
     created_at: string;
 };

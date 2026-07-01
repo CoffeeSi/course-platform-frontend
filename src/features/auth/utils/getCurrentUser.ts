@@ -13,7 +13,6 @@ const getCurrentUser = cache(async () => {
   try {
     return await usersApi.fetchProfile(token);
   } catch (error) {
-    console.log('Не удалось получить профиль по токену');
     return null;
   }
 });

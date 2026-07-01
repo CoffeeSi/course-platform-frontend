@@ -1,10 +1,10 @@
 "use client";
 
-import {FormEvent, useState} from "react";
-import {RegisterPayload} from "@/features/auth/types/auth.types";
-import {useRouter} from "next/navigation";
-import {authApi} from "@/features/auth/api/auth.api";
-import {Button} from "@/components/ui/button";
+import { FormEvent, useState } from "react";
+import { RegisterPayload } from "@/features/auth/types/auth.types";
+import { useRouter } from "next/navigation";
+import { authApi } from "@/features/auth/api/auth.api";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterForm() {
   const [error, setError] = useState('');

@@ -19,7 +19,7 @@ export const coursesApi = {
 
     },
     fetchCourse: (id: number, token?: string) => {
-        return client.get<CourseDetail>(`/api/v1/courses/${id}/`,{
+        return client.get<CourseDetail>(`/api/v1/courses/${id}/`, {
             token,
             next: { revalidate: 0 },
         });

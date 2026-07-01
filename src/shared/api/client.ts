@@ -13,8 +13,17 @@ export class ApiError extends Error {
   }
 }
 
+const getBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    return process.env.NEXT_PUBLIC_API_BASE_URL || '';
+  }
+
+  return process.env.LOCAL_API_URL || process.env.BACKEND_URL || 'http://127.0.0.1:8000';
+};
+
 async function customFetch<T>(endpoint: string, options: CustomRequestInit = {}): Promise<T> {
-  let url = endpoint.startsWith('http') ? endpoint : `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`;
+  const baseUrl = getBaseUrl();
+  let url = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
 
   const { params, token, headers: customHeaders, ...fetchOptions } = options;
   if (params) {
@@ -37,7 +46,9 @@ async function customFetch<T>(endpoint: string, options: CustomRequestInit = {})
   }
 
   if (token) {
-    headers.set('Cookie', `access_token=${token}`);
+    if (typeof window === 'undefined') {
+      headers.set('Cookie', `access_token=${token}`);
+    }
   }
 
   const response = await fetch(url, {
@@ -49,7 +60,7 @@ async function customFetch<T>(endpoint: string, options: CustomRequestInit = {})
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new ApiError(
-      errorData.message || errorData.detail || `HTTP Error: ${response.status}`, 
+      errorData.message || errorData.detail || `HTTP Error: ${response.status}`,
       response.status
     );
   }
@@ -63,28 +74,28 @@ async function customFetch<T>(endpoint: string, options: CustomRequestInit = {})
 
 export const client = {
   get: <T>(endpoint: string, options?: CustomRequestInit) =>
-      customFetch<T>(endpoint, { ...options, method: 'GET' }),
+    customFetch<T>(endpoint, { ...options, method: 'GET' }),
 
   post: <T>(endpoint: string, body?: any, options?: CustomRequestInit) => {
-      const isFormData = body instanceof FormData;
-      return customFetch<T>(endpoint, { 
-          ...options, 
-          method: 'POST', 
-          body: isFormData ? body : JSON.stringify(body) 
-      });
+    const isFormData = body instanceof FormData;
+    return customFetch<T>(endpoint, {
+      ...options,
+      method: 'POST',
+      body: isFormData ? body : JSON.stringify(body)
+    });
   },
 
   patch: <T>(endpoint: string, body?: any, options?: CustomRequestInit) => {
-      const isFormData = body instanceof FormData;
-      return customFetch<T>(endpoint, { 
-          ...options, 
-          method: 'PATCH', 
-          body: isFormData ? body : JSON.stringify(body) 
-      });
+    const isFormData = body instanceof FormData;
+    return customFetch<T>(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: isFormData ? body : JSON.stringify(body)
+    });
   },
 
   delete: <T>(endpoint: string, options?: CustomRequestInit) =>
-      customFetch<T>(endpoint, { ...options, method: 'DELETE' }),
+    customFetch<T>(endpoint, { ...options, method: 'DELETE' }),
 };
 
 export default client;

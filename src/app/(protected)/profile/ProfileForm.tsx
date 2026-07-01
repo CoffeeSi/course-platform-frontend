@@ -41,7 +41,7 @@ export function ProfileForm({ initialData }: { initialData: any }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <label className="flex flex-col gap-2 text-sm font-medium">
-        First name
+        Имя
         <input
           name="first_name"
           defaultValue={initialData?.first_name ?? ""}
@@ -50,7 +50,7 @@ export function ProfileForm({ initialData }: { initialData: any }) {
       </label>
 
       <label className="flex flex-col gap-2 text-sm font-medium">
-        Last name
+        Фамилия
         <input
           name="last_name"
           defaultValue={initialData?.last_name ?? ""}
@@ -59,7 +59,7 @@ export function ProfileForm({ initialData }: { initialData: any }) {
       </label>
 
       <label className="flex flex-col gap-2 text-sm font-medium">
-        Avatar URL
+        Аватар (URL)
         <input
           name="avatar"
           defaultValue={initialData?.avatar ?? ""}
@@ -67,8 +67,8 @@ export function ProfileForm({ initialData }: { initialData: any }) {
         />
       </label>
 
-      {isSuccess && <p className="text-sm text-green-600">Saved successfully.</p>}
-      {isError && <p className="text-sm text-destructive">Could not update profile.</p>}
+      {isSuccess && <p className="text-sm text-green-600">Профиль успешно обновлен</p>}
+      {isError && <p className="text-sm text-destructive">Не удалось обновить профиль</p>}
 
       <Button type="submit" disabled={isPending}>
         {isPending ? "Saving..." : "Save profile"}
