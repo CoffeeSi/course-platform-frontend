@@ -23,6 +23,6 @@ export const authApi = {
     },
 
     resendEmailVerification: (email: string) => {
-        return client.post('/api/v1/users/resend-email-verification/', email);
+        return client.post('/api/v1/users/resend-email-verification/', { email });
     }
 };

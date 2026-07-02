@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { Button } from "@/components/ui/button";
 import { enrollmentsApi } from "@/features/enrollments/api/enrollmets.api";
+import { paymentsApi } from "@/features/payments/api/payments.api";
 
 export async function EnrollButton({
   courseId,
@@ -46,8 +47,29 @@ export async function EnrollButton({
   async function enroll() {
     "use server";
     const token = (await cookies()).get("access_token")?.value;
-    await enrollmentsApi.enrollToCourse(courseId, token);
-    revalidatePath(`/courses/${courseId}`);
+
+    if (isFree) {
+      try {
+        await enrollmentsApi.enrollToCourse(courseId, token);
+      } catch {
+        redirect(`/courses/${courseId}?payment_error=checkout_unavailable`);
+      }
+      revalidatePath(`/courses/${courseId}`);
+      return;
+    }
+
+    let paymentUrl: string | undefined;
+    try {
+      const result = await paymentsApi.createCoursePayment(courseId, token);
+      paymentUrl = result.paymentUrl || "";
+    } catch {
+      redirect(`/courses/${courseId}?payment_error=checkout_unavailable`);
+    }
+
+    if (paymentUrl) {
+      redirect(paymentUrl);
+    }
+    redirect(`/courses/${courseId}?payment_error=checkout_unavailable`);
   }
 
   return (

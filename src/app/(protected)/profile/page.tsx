@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { ProfileForm } from "./ProfileForm";
 import getCurrentUser from "@/features/auth/utils/getCurrentUser";
+import { PaymentsHistory } from "@/features/payments/components/PaymentsHistory";
 
 export default async function ProfilePage() {
   const user = await getCurrentUser()
@@ -29,6 +30,7 @@ export default async function ProfilePage() {
           </div>
         </dl>
         <ProfileForm initialData={user.profile} />
+        <PaymentsHistory />
       </div>
     </main>
   );

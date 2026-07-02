@@ -5,7 +5,7 @@ import getCurrentUser from "@/features/auth/utils/getCurrentUser";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-export default async function CourseDetails({ courseID }: { courseID: number }) {
+export default async function CourseDetails({ courseID, paymentError }: { courseID: number; paymentError?: string }) {
   const token = (await cookies()).get("access_token")?.value;
   const user = await getCurrentUser();
   let course;
@@ -23,6 +23,11 @@ export default async function CourseDetails({ courseID }: { courseID: number }) 
   return (
     <>
       <section className="flex flex-col gap-4">
+        {paymentError ? (
+          <p className="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            Не удалось открыть checkout для оплаты. Платеж создан, но backend не вернул ссылку на оплату.
+          </p>
+        ) : null}
         <p className="text-sm text-muted-foreground">{course.category?.name}</p>
         <h1 className="text-4xl font-extrabold tracking-tight">{course.title}</h1>
         <p className="max-w-3xl text-muted-foreground">{course.description}</p>
@@ -41,7 +46,7 @@ export default async function CourseDetails({ courseID }: { courseID: number }) 
               <ul className="mt-3 flex flex-col gap-2 text-sm">
                 {(module.lessons ?? []).map((lesson) => (
                   <li key={lesson.id} className="rounded-md bg-muted px-3 py-2">
-                    {lesson.order}. <Link href={`/lessons/${lesson.id}`}>{lesson.title}</Link>
+                    <Link href={`/lessons/${lesson.id}`}>{lesson.title}</Link>
                   </li>
                 ))}
               </ul>
